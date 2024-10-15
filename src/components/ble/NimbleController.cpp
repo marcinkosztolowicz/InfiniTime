@@ -29,6 +29,7 @@ NimbleController::NimbleController(Pinetime::System::SystemTask& systemTask,
                                    Battery& batteryController,
                                    Pinetime::Drivers::SpiNorFlash& spiNorFlash,
                                    HeartRateController& heartRateController,
+                                   Ppg& ppg,
                                    MotionController& motionController,
                                    FS& fs)
   : systemTask {systemTask},
@@ -46,6 +47,7 @@ NimbleController::NimbleController(Pinetime::System::SystemTask& systemTask,
     weatherService {dateTimeController},
     batteryInformationService {batteryController},
     immediateAlertService {systemTask, notificationManager},
+    heartRateRawService {ppg},
     heartRateService {*this, heartRateController},
     motionService {*this, motionController},
     fsService {systemTask, fs},
@@ -95,6 +97,7 @@ void NimbleController::Init() {
   dfuService.Init();
   batteryInformationService.Init();
   immediateAlertService.Init();
+  heartRateRawService.Init();
   heartRateService.Init();
   motionService.Init();
   fsService.Init();

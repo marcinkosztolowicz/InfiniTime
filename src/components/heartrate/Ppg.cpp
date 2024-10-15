@@ -142,6 +142,10 @@ Ppg::Ppg() {
   spectrum.fill(0.0f);
 }
 
+ uint8_t* Ppg::getRawData(){
+    return reinterpret_cast<uint8_t*>(dataHRS.data());
+}
+
 int8_t Ppg::Preprocess(uint32_t hrs, uint32_t als) {
   if (dataIndex < dataLength) {
     dataHRS[dataIndex++] = hrs;
@@ -239,7 +243,7 @@ int Ppg::ProcessHeartRate(bool init) {
     resetSpectralAvg = true;
   }
   // Set the ambient light threshold and return HR in BPM
-  alsThreshold = static_cast<uint16_t>(alsValue * alsFactor);
+  alsThreshold = static_cast<uint16_t>((alsValue + 1024) * alsFactor);
   // Get current average HR. If HR reduced to zero, return -1 (reset) else HR
   peakLocation = HeartRateAverage(peakLocation);
   int rtn = -1;

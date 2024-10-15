@@ -46,7 +46,9 @@ SystemTask::SystemTask(Drivers::SpiMaster& spi,
                        Pinetime::Controllers::MotionController& motionController,
                        Pinetime::Drivers::Bma421& motionSensor,
                        Controllers::Settings& settingsController,
+                       Controllers::SettingsHrs& settingsHrsController,
                        Pinetime::Controllers::HeartRateController& heartRateController,
+                       Pinetime::Controllers::Ppg& ppg,
                        Pinetime::Applications::DisplayApp& displayApp,
                        Pinetime::Applications::HeartRateTask& heartRateApp,
                        Pinetime::Controllers::FS& fs,
@@ -65,7 +67,9 @@ SystemTask::SystemTask(Drivers::SpiMaster& spi,
     heartRateSensor {heartRateSensor},
     motionSensor {motionSensor},
     settingsController {settingsController},
+    settingsHrsController {settingsHrsController},
     heartRateController {heartRateController},
+    ppg {ppg},
     motionController {motionController},
     displayApp {displayApp},
     heartRateApp(heartRateApp),
@@ -79,6 +83,7 @@ SystemTask::SystemTask(Drivers::SpiMaster& spi,
                      batteryController,
                      spiNorFlash,
                      heartRateController,
+                     ppg,
                      motionController,
                      fs) {
 }
@@ -136,6 +141,7 @@ void SystemTask::Work() {
   motionSensor.Init();
   motionController.Init(motionSensor.DeviceType());
   settingsController.Init();
+  settingsHrsController.Init();
 
   displayApp.Register(this);
   displayApp.Register(&nimbleController.weather());

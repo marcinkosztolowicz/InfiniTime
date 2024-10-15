@@ -1,0 +1,6 @@
+{
+    "infinitime_version": 1.14,
+    "led_current_mA": 40,
+    "delay_ms": 50,
+    "description": "steady hand, then waving hand"
+}

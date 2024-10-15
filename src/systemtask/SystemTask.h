@@ -8,6 +8,7 @@
 #include <timers.h>
 #include <heartratetask/HeartRateTask.h>
 #include <components/settings/Settings.h>
+#include <components/settings/SettingsHrs.h>
 #include <drivers/Bma421.h>
 #include <drivers/PinMap.h>
 #include <components/motion/MotionController.h>
@@ -67,7 +68,9 @@ namespace Pinetime {
                  Pinetime::Controllers::MotionController& motionController,
                  Pinetime::Drivers::Bma421& motionSensor,
                  Controllers::Settings& settingsController,
+                 Controllers::SettingsHrs& settingsHrsController,
                  Pinetime::Controllers::HeartRateController& heartRateController,
+                 Pinetime::Controllers::Ppg& ppg,
                  Pinetime::Applications::DisplayApp& displayApp,
                  Pinetime::Applications::HeartRateTask& heartRateApp,
                  Pinetime::Controllers::FS& fs,
@@ -112,7 +115,9 @@ namespace Pinetime {
       Pinetime::Drivers::Hrs3300& heartRateSensor;
       Pinetime::Drivers::Bma421& motionSensor;
       Pinetime::Controllers::Settings& settingsController;
+      Pinetime::Controllers::SettingsHrs& settingsHrsController;
       Pinetime::Controllers::HeartRateController& heartRateController;
+      Pinetime::Controllers::Ppg& ppg;
       Pinetime::Controllers::MotionController& motionController;
 
       Pinetime::Applications::DisplayApp& displayApp;

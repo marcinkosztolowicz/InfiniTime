@@ -1,6 +1,11 @@
 .idea/
+.vscode/
 # Python virtual environment for DFU images
 .venv/
+
+ppg_analysis/__pycache__
+ppg_analysis/.ipynb_checkpoints
+ppg_analysis/.mypy_cache
 
 # CMake
 cmake-build-*

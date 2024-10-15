@@ -15,6 +15,7 @@ namespace Pinetime {
     public:
       Ppg();
       int8_t Preprocess(uint32_t hrs, uint32_t als);
+      uint8_t* getRawData();
       int HeartRate();
       void Reset(bool resetDaqBuffer);
       static constexpr int deltaTms = 100;

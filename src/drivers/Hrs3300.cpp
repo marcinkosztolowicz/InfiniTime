@@ -15,7 +15,7 @@
 using namespace Pinetime::Drivers;
 
 namespace {
-  static constexpr uint8_t ledDriveCurrentValue = 0x2f;
+  static constexpr uint8_t ledDriveCurrentValue = 0x3f;
 }
 
 /** Driver for the HRS3300 heart rate sensor.
@@ -23,7 +23,7 @@ namespace {
  *
  * Experimentaly derived changes to improve signal/noise (see comments below) - Ceimour
  */
-Hrs3300::Hrs3300(TwiMaster& twiMaster, uint8_t twiAddress) : twiMaster {twiMaster}, twiAddress {twiAddress} {
+Hrs3300::Hrs3300(TwiMaster& twiMaster, uint8_t twiAddress, Pinetime::Controllers::SettingsHrs& settingsHrs) : twiMaster {twiMaster}, twiAddress {twiAddress}, settingsHrs{settingsHrs} {
 }
 
 void Hrs3300::Init() {
@@ -31,22 +31,24 @@ void Hrs3300::Init() {
 
   Disable();
   vTaskDelay(100);
-
+// good enable 68 and drive 7f ??
+// good enable 68 and drive 3f ??
+// 58 68 (check)
   // HRS disabled, 50ms wait time between ADC conversion period, current 12.5mA
-  WriteRegister(static_cast<uint8_t>(Registers::Enable), 0x50);
+  WriteRegister(static_cast<uint8_t>(Registers::Enable), settingsHrs.GetHrsEnable()); // 0x50
 
   // Current 12.5mA and low nibble 0xF.
   // Note: Setting low nibble to 0x8 per the datasheet results in
   // modulated LED driver output. Setting to 0xF results in clean,
   // steady output during the ADC conversion period.
-  WriteRegister(static_cast<uint8_t>(Registers::PDriver), ledDriveCurrentValue);
+  WriteRegister(static_cast<uint8_t>(Registers::PDriver), settingsHrs.GetHrsDrive());
 
   // HRS and ALS both in 15-bit mode results in ~50ms LED drive period
   // and presumably ~50ms ADC conversion period.
-  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x77);
+  WriteRegister(static_cast<uint8_t>(Registers::Res), 0x77); //0x77
 
   // Gain set to 1x
-  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0x00);
+  WriteRegister(static_cast<uint8_t>(Registers::Hgain), 0x00); //0x00
 }
 
 void Hrs3300::Enable() {
@@ -55,7 +57,7 @@ void Hrs3300::Enable() {
   value |= 0x80;
   WriteRegister(static_cast<uint8_t>(Registers::Enable), value);
 
-  WriteRegister(static_cast<uint8_t>(Registers::PDriver), ledDriveCurrentValue);
+  WriteRegister(static_cast<uint8_t>(Registers::PDriver), settingsHrs.GetHrsDrive());
 }
 
 void Hrs3300::Disable() {

@@ -86,7 +86,6 @@ Pinetime::Drivers::Cst816S touchPanel {twiMaster, touchPanelTwiAddress};
   #include "main.h"
 #endif
 Pinetime::Drivers::Bma421 motionSensor {twiMaster, motionSensorTwiAddress};
-Pinetime::Drivers::Hrs3300 heartRateSensor {twiMaster, heartRateSensorTwiAddress};
 
 TimerHandle_t debounceTimer;
 TimerHandle_t debounceChargeTimer;
@@ -94,10 +93,14 @@ Pinetime::Controllers::Battery batteryController;
 Pinetime::Controllers::Ble bleController;
 
 Pinetime::Controllers::HeartRateController heartRateController;
-Pinetime::Applications::HeartRateTask heartRateApp(heartRateSensor, heartRateController);
+Pinetime::Controllers::Ppg ppg;
+
 
 Pinetime::Controllers::FS fs {spiNorFlash};
 Pinetime::Controllers::Settings settingsController {fs};
+Pinetime::Controllers::SettingsHrs settingsHrsController {fs};
+Pinetime::Drivers::Hrs3300 heartRateSensor {twiMaster, heartRateSensorTwiAddress, settingsHrsController};
+Pinetime::Applications::HeartRateTask heartRateApp(heartRateSensor, heartRateController, ppg);
 Pinetime::Controllers::MotorController motorController {};
 
 Pinetime::Controllers::DateTime dateTimeController {settingsController};
@@ -140,7 +143,9 @@ Pinetime::System::SystemTask systemTask(spi,
                                         motionController,
                                         motionSensor,
                                         settingsController,
+                                        settingsHrsController,
                                         heartRateController,
+                                        ppg,
                                         displayApp,
                                         heartRateApp,
                                         fs,
